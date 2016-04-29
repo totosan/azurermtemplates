@@ -17,8 +17,8 @@
         "uniqueDNSNameBase": {
             "value": "chocovm"
         },
-        "subscriptionId": {
-            "value": ""
+        "storageAccountType": {
+            "value": "Standard_LRS"
         },
         "vmSize": {
             "value": "Standard_A1"
