@@ -24,8 +24,8 @@
                 "Standard_GRS"
             ],
         },
-        "uniqueDNSNameBase":{
-          "type" : "string"
+        "uniqueDNSNameBase": {
+            "type": "string"
         },
         "vmSize": {
             "type": "string",
@@ -38,9 +38,9 @@
                 "Standard_A4"
             ]
         },
-        "applicationToInstall" :{
-            "type" : "string",
-            "defaultValue" : "notepadplusplus.install"
+        "applicationToInstall": {
+            "type": "string",
+            "defaultValue": "notepadplusplus.install"
         },
         "adminUsername": {
             "type": "string"
@@ -48,46 +48,44 @@
         "adminPassword": {
             "type": "securestring"
         },
-        "vmSourceImageName" :{
-            "type" : "string",
-            "defaultValue" : "a699494373c04fc0bc8f2bb1389d6106__Windows-Server-2012-R2-201503.01-en.us-127GB.vhd"
+        "vmSourceImageName": {
+            "type": "string",
+            "defaultValue": "a699494373c04fc0bc8f2bb1389d6106__Windows-Server-2012-R2-201503.01-en.us-127GB.vhd"
         },
-        "virtualNetworkName" :{
-            "type" : "string",
-            "defaultValue" : "myVNet"
+        "virtualNetworkName": {
+            "type": "string",
+            "defaultValue": "myVNet"
         }
     },
     "variables": {
         "sourceImageName": "[concat('/',subscription().subscriptionId,'/services/images/',parameters('vmSourceImageName'))]",
         "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
-        "scriptUrl" : "https://iaasscripts.blob.core.windows.net/scripts/InstallApplication.ps1",
-	      "scriptName" : ".\\InstallApplication.ps1",
-        "customScriptExtensionVersion" : "1.4",
-	      "scriptArg" : "[parameters('applicationToInstall')]",
-        "publicIPAddressName" : "[concat(parameters('uniqueDNSNameBase'),'pubIP')]",
-        "publicIPAddressType" : "Dynamic",
-        "vmStorageAccountContainerName" : "vhds",
-        "addressPrefix" : "10.0.0.0/16",
-        "subnet1Name" : "Subnet-1",
+        "scriptUrl": "https://iaasscripts.blob.core.windows.net/scripts/InstallApplication.ps1",
+        "scriptName": ".\\InstallApplication.ps1",
+        "customScriptExtensionVersion": "1.4",
+        "scriptArg": "[parameters('applicationToInstall')]",
+        "publicIPAddressName": "[concat(parameters('uniqueDNSNameBase'),'pubIP')]",
+        "publicIPAddressType": "Dynamic",
+        "vmStorageAccountContainerName": "vhds",
+        "addressPrefix": "10.0.0.0/16",
+        "subnet1Name": "Subnet-1",
         "subnet1Ref": "[concat(variables('vnetID'),'/subnets/',variables('subnet1Name'))]",
-	      "subnet1Prefix" : "10.0.0.0/24",
-        "nicName" : "[concat(parameters('uniqueDNSNameBase'),'Nic')]",
+        "subnet1Prefix": "10.0.0.0/24",
+        "nicName": "[concat(parameters('uniqueDNSNameBase'),'Nic')]",
         "vmExtensionName": "CustomScriptExtension"
     },
-
-
     "resources": [
         {
             "type": "Microsoft.Storage/storageAccounts",
             "name": "[parameters('newStorageAccountName')]",
-            "apiVersion": "2016-01-01",
+            "apiVersion": "2015-06-15",
             "location": "[parameters('location')]",
             "properties": {
                 "accountType": "[parameters('storageAccountType')]"
             }
         },
         {
-            "apiVersion": "2014-12-01-preview",
+            "apiVersion": "2016-03-30",
             "type": "Microsoft.Network/publicIPAddresses",
             "name": "[variables('publicIPAddressName')]",
             "location": "[parameters('location')]",
@@ -99,7 +97,7 @@
             }
         },
         {
-            "apiVersion": "2014-12-01-preview",
+            "apiVersion": "2016-03-30",
             "type": "Microsoft.Network/virtualNetworks",
             "name": "[parameters('virtualNetworkName')]",
             "location": "[parameters('location')]",
@@ -120,7 +118,7 @@
             }
         },
         {
-            "apiVersion": "2014-12-01-preview",
+            "apiVersion": "2016-03-30",
             "type": "Microsoft.Network/networkInterfaces",
             "name": "[variables('nicName')]",
             "location": "[parameters('location')]",
@@ -146,7 +144,7 @@
             }
         },
         {
-            "apiVersion": "2014-12-01-preview",
+            "apiVersion": "2015-01-01",
             "type": "Microsoft.Compute/virtualMachines",
             "name": "[parameters('uniqueDNSNameBase')]",
             "location": "[parameters('location')]",
@@ -155,6 +153,7 @@
                 "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
             ],
             "properties": {
+               "mode":"Complete",
                 "hardwareProfile": {
                     "vmSize": "[parameters('vmSize')]"
                 },
@@ -181,7 +180,7 @@
         {
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "name": "[concat(parameters('uniqueDNSNameBase'),'/', variables('vmExtensionName'))]",
-            "apiVersion": "2014-12-01-preview",
+            "apiVersion": "2015-06-15",
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[concat('Microsoft.Compute/virtualMachines/', parameters('uniqueDNSNameBase'))]"
@@ -191,7 +190,9 @@
                 "type": "CustomScriptExtension",
                 "typeHandlerVersion": "[variables('customScriptExtensionVersion')]",
                 "settings": {
-                    "fileUris": ["[variables('scriptUrl')]"],
+                    "fileUris": [
+                        "[variables('scriptUrl')]"
+                    ],
                     "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -command ',variables('scriptName'),' ',variables('scriptArg'))]"
                 }
             }

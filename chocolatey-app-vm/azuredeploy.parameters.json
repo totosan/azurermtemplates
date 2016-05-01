@@ -28,6 +28,9 @@
         },
         "virtualNetworkName": {
             "value": "myVNet"
+        },
+        "storageAccountType":{
+            "value": "Standard_LRS"
         }
    }
 }
