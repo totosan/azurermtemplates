@@ -14,7 +14,8 @@
             ]
         },
         "newStorageAccountName": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         },
         "storageAccountType": {
             "type": "string",
@@ -22,10 +23,11 @@
             "allowedValues": [
                 "Standard_LRS",
                 "Standard_GRS"
-            ],
+            ]
         },
         "uniqueDNSNameBase": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         },
         "vmSize": {
             "type": "string",
