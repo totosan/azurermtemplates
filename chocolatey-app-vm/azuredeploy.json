@@ -146,8 +146,8 @@
             }
         },
         {
-            "apiVersion": "2015-01-01",
             "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2016-03-30",
             "name": "[parameters('uniqueDNSNameBase')]",
             "location": "[parameters('location')]",
             "dependsOn": [
