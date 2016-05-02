@@ -165,7 +165,7 @@
                     "adminPassword": "[parameters('adminPassword')]"
                 },
                 "storageProfile": {
-                    "sourceImage": {
+                    "sourceImageName": {
                         "id": "[variables('sourceImageName')]"
                     },
                     "destinationVhdsContainer": "[concat('http://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/')]"
