@@ -1,5 +1,5 @@
 {
-    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "location": {
@@ -60,6 +60,8 @@
         }
     },
     "variables": {
+        "imagePublisher": "MicrosoftWindowsServer",
+        "imageOffer": "WindowsServer",
         "sourceImageName": "[concat('/',subscription().subscriptionId,'/services/images/',parameters('vmSourceImageName'))]",
         "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
         "scriptUrl": "https://iaasscripts.blob.core.windows.net/scripts/InstallApplication.ps1",
@@ -146,8 +148,8 @@
             }
         },
         {
+            "apiVersion": "2015-06-15",
             "type": "Microsoft.Compute/virtualMachines",
-            "apiVersion": "2016-03-30",
             "name": "[parameters('uniqueDNSNameBase')]",
             "location": "[parameters('location')]",
             "dependsOn": [
@@ -155,7 +157,7 @@
                 "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
             ],
             "properties": {
-               "mode":"Complete",
+                "mode": "Complete",
                 "hardwareProfile": {
                     "vmSize": "[parameters('vmSize')]"
                 },
@@ -165,10 +167,12 @@
                     "adminPassword": "[parameters('adminPassword')]"
                 },
                 "storageProfile": {
-                    "sourceImageName": {
-                        "id": "[variables('sourceImageName')]"
-                    },
-                    "destinationVhdsContainer": "[concat('http://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/')]"
+                    "imageReference": {
+                        "publisher": "[variables('imagePublisher')]",
+                        "offer": "[variables('imageOffer')]",
+                        "sku": "2012-R2-Datacenter",
+                        "version": "latest"
+                    }
                 },
                 "networkProfile": {
                     "networkInterfaces": [
